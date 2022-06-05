@@ -1,4 +1,4 @@
-# simple-chatbot
+# Simple E-Commerce Chatbot
 
 ## How to Run
 1. Install semua library yang ada di file requirements.txt menggunakan pip dengan perintah pip install -r requirements.txt
