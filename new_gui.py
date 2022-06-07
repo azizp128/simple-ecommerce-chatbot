@@ -1,6 +1,8 @@
 import PySimpleGUI as sg
 from model import *
 from predict import get_bag_of_words, classify, response
+from data import *
+
 import datetime
 
 def classify_and_response(a):
@@ -21,14 +23,13 @@ def classify_and_response(a):
         
     return respond
 
-def product_classify(a):
-    classify_ = classify(a)
-    class_name = classify_[0]
+def intent_classify(itt):
+    for intent in intents:
+        if intent["tag"] == itt:
+            respond = intent['responses']
+            for i in respond:
+                print(f"ADMIN : {i}\n")
 
-    if classify_[0] == 'product':
-        respond = f"{response(class_name)}"
-    
-    return respond
   
 sg.theme('GreenTan')
 sg.SetOptions(text_color="#e4e4e4", font='opensans 11')
@@ -51,13 +52,18 @@ if __name__ == "__main__":
   while True:
     event, value = window.read()
     if event == 'Product':
-        query = product_classify(value['-QUERY-'])
-        print(f"ADMIN : {query}\n")
-    if event != "EXIT":
-        break
+        intent_classify('product')
+    if event == 'Price':
+        intent_classify('price')
+    if event == 'Shipping':
+        intent_classify('shipping')
+    if event == 'Payment':
+        intent_classify('payment')
     if event == 'SEND':
         query = classify_and_response(value['-QUERY-'])
         print(f"USER : {value['-QUERY-']}\nADMIN : {query}\n")
+    if event == "EXIT":
+        break
     
 window.close()
     
