@@ -2,10 +2,8 @@ from data import intents
 import nltk
 #nltk.download("punkt")
 from nltk.stem.lancaster import LancasterStemmer
-
-stemmer = LancasterStemmer()
-
 import tensorflow as tf
+from tensorflow.keras.utils import to_categorical
 import numpy as np
 import random
 import string
@@ -13,6 +11,7 @@ import string
 def remove_punc(a):
   return a.translate(str.maketrans('', '', string.punctuation))
 
+stemmer = LancasterStemmer()
 words = []
 classes = []
 documents = []
@@ -30,10 +29,10 @@ for intent in intents:
 
 words = [stemmer.stem(word.lower())  for word in words]
 words = list(set(words))
-words
 
 y = []
 X = []
+
 for doc in documents:
   bag = []
   pattern_words = doc[0]
@@ -44,21 +43,14 @@ for doc in documents:
   X.append(bag)
 
 X, y = np.array(X), np.array(y)
-from tensorflow.keras.utils import to_categorical
 y = to_categorical(y)
 
 # Model ANN
 model = tf.keras.Sequential([
-
         # input layer
         tf.keras.layers.Flatten(input_shape=(X.shape[1], )),
-
-        
         tf.keras.layers.Dense(32, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)),
-        
         tf.keras.layers.Dense(16, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001)),
-        
-        
         tf.keras.layers.Dense(len(classes), activation='softmax')
     ])
 
